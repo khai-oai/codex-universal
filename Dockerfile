@@ -156,6 +156,8 @@ ENV UV_NO_PROGRESS=1
 
 ARG NVM_VERSION=v0.40.2
 ARG NODE_VERSION=22
+ARG NODE_22_VERSION=22.23.4
+ARG NODE_24_VERSION=24.22.1
 
 ENV NVM_DIR=/root/.nvm
 # Corepack tries to do too much - disable some of its features:
@@ -175,8 +177,8 @@ RUN --mount=type=cache,target=/root/.npm \
     # The latest versions of npm aren't supported on node 18, so we install each set differently
     && nvm install 18 && nvm use 18 && npm install -g npm@10.9 pnpm@10.12 && corepack enable && corepack install -g yarn \
     && nvm install 20 && nvm use 20 && npm install -g npm@11.4 pnpm@10.12 && corepack enable && corepack install -g yarn \
-    && nvm install 22 && nvm use 22 && npm install -g npm@11.4 pnpm@10.12 && corepack enable && corepack install -g yarn \
-    && nvm install 24 && nvm use 24 && npm install -g npm@11.4 pnpm@10.12 && corepack enable && corepack install -g yarn \
+    && nvm install "$NODE_22_VERSION" && nvm use "$NODE_22_VERSION" && npm install -g npm@11.4 pnpm@10.12 && corepack enable && corepack install -g yarn \
+    && nvm install "$NODE_24_VERSION" && nvm use "$NODE_24_VERSION" && npm install -g npm@11.4 pnpm@10.12 && corepack enable && corepack install -g yarn \
     && nvm alias default "$NODE_VERSION" \
     && nvm cache clear \
     && npm cache clean --force || true \
@@ -333,7 +335,10 @@ RUN chmod +x /opt/verify.sh \
         RUBY_VERSIONS="$RUBY_VERSIONS" \
         PHP_VERSIONS="$PHP_VERSIONS" \
         JAVA_VERSIONS="$( [ "$TARGETARCH" = "arm64" ] && echo "$ARM_JAVA_VERSIONS" || echo "$AMD_JAVA_VERSIONS" )" \
-        "/opt/verify.sh"
+        "/opt/verify.sh" \
+    && bash -lc '\
+        test "$(nvm exec --silent 22 node --version)" = "v$NODE_22_VERSION" \
+        && test "$(nvm exec --silent 24 node --version)" = "v$NODE_24_VERSION"'
 
 ### ENTRYPOINT ###
 

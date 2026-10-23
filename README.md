@@ -28,7 +28,7 @@ The below script shows how can you approximate the `setup` environment in Codex:
 # This script mounts the current directory similar to how it would get cloned in.
 docker run --rm -it \
     -e CODEX_ENV_PYTHON_VERSION=3.12 \
-    -e CODEX_ENV_NODE_VERSION=20 \
+    -e CODEX_ENV_NODE_VERSION=22 \
     -e CODEX_ENV_RUST_VERSION=1.87.0 \
     -e CODEX_ENV_GO_VERSION=1.23.8 \
     -e CODEX_ENV_SWIFT_VERSION=6.2 \
@@ -47,7 +47,7 @@ The following environment variables can be set to configure runtime installation
 | Environment variable       | Description                | Supported versions                               | Additional packages                                                  |
 | -------------------------- | -------------------------- | ------------------------------------------------ | -------------------------------------------------------------------- |
 | `CODEX_ENV_PYTHON_VERSION` | Python version to install  | `3.10`, `3.11.12`, `3.12`, `3.13`, `3.14.0`        | `pyenv`, `poetry`, `uv`, `ruff`, `black`, `mypy`, `pyright`, `isort` |
-| `CODEX_ENV_NODE_VERSION`   | Node.js version to install | `18`, `20`, `22`                                 | `corepack`, `yarn`, `pnpm`, `npm`                                    |
+| `CODEX_ENV_NODE_VERSION`   | Node.js version to install | `22`, `24`; legacy `18`, `20`                     | `corepack`, `yarn`, `pnpm`, `npm`                                    |
 | `CODEX_ENV_RUST_VERSION`   | Rust version to install    | `1.83.0`, `1.84.1`, `1.85.1`, `1.86.0`, `1.87.0`, `1.88.0`, `1.89.0`, `1.90`, `1.91.1`, `1.92.0`, `1.93.0`, `1.94.0`, `1.95.0` |                                                                      |
 | `CODEX_ENV_GO_VERSION`     | Go version to install      | `1.22.12`, `1.23.8`, `1.24.3`, `1.25.1`           |                                                                      |
 | `CODEX_ENV_SWIFT_VERSION`  | Swift version to install   | `5.10`, `6.1`, `6.2`                              |                                                                      |
@@ -56,6 +56,11 @@ The following environment variables can be set to configure runtime installation
 | `CODEX_ENV_JAVA_VERSION`   | JDK version to install  | `25`, `24`, `23`, `22`, `21`, `17`, `11`                |                                                                      |
 
 
+
+Node 22 and 24 are installed at security releases 22.23.4 and 24.22.1. Major-version
+selection (for example, `CODEX_ENV_NODE_VERSION=22`) uses the corresponding installed
+patch. Node 18 and 20 remain available only for compatibility; they are end-of-life
+and do not receive these security fixes. Use a supported version for new environments.
 
 ## What's included
 
